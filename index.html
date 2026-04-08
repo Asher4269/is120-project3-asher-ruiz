@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <script
+      defer
+      src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"
+    ></script>
+    <script defer src="script.js"></script>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <header><h1>budget-buddy</h1></header>
+    <nav>
+      <p class="p-nav">Nav:</p>
+      <a href="#create-budget">Create Budget</a>
+      <a href="#display-budget">Budget Display</a>
+    </nav>
+    <main>
+      <!-- Input Area: This is where CRUD takes place. -->
+      <div id="create-budget" class="input-area">
+        <h2>Input Line Item</h2>
+        <div class="crud-buttons">
+          <button class="alter-item">Alter Item</button>
+          <button class="delete-item">Delete Item</button>
+          <button class="add-item">Add Item</button>
+        </div>
+      </div>
+
+      <!-- Display Area: This will display a table and ultimate calculation area that shows budget criteria to user based on budget name. -->
+      <div id="display-budget" class="budget-display-area">
+        <h2>Displaying Budget: [<span class="budget-name"></span>]</h2>
+        <h3>Expenses</h3>
+        <div class="expenses-category"></div>
+        <h3>Budgets</h3>
+        <div class="budgets-category"></div>
+        <h3>Savings</h3>
+        <div class="savings-category"></div>
+        <h3>Income Calculator</h3>
+        <div class="income-calculator"></div>
+      </div>
+    </main>
+  </body>
+</html>

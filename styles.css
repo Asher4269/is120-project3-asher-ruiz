@@ -1,0 +1,145 @@
+* {
+  padding: 0px;
+  margin: 0px;
+  box-sizing: border-box;
+
+  font-family: monospace;
+}
+
+:root {
+  --primary-color: #dad7cd;
+  --secondary-color: #3a5a40;
+  --tertiary-color: #588157;
+  --accent-color: #bc6c25;
+
+  --complement-secondary: #a3b18a;
+
+  --small-font: 1.25rem;
+
+  --heading-font: 2.5rem;
+}
+
+body {
+  position: relative;
+
+  min-height: 100vh;
+
+  display: grid;
+  grid-template-areas:
+    "header"
+    "nav"
+    "main";
+  grid-template-rows: 6% 12% auto;
+}
+
+header {
+  grid-area: header;
+
+  background-color: var(--secondary-color);
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+nav {
+  grid-area: nav;
+
+  background-color: var(--tertiary-color);
+
+  display: flex;
+  align-items: center;
+  justify-content: end;
+  gap: 1em;
+  padding: 2%;
+}
+
+main {
+  grid-area: main;
+
+  background-color: var(--primary-color);
+
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  align-items: center;
+  gap: 2em;
+}
+
+h1 {
+  color: var(--complement-secondary);
+  font-size: var(--heading-font);
+}
+
+h2 {
+  color: var(--secondary-color);
+  padding: 1%;
+}
+
+h3 {
+  color: var(--accent-color);
+  margin-left: 4%;
+  padding: 0.5%;
+
+  text-decoration: underline;
+}
+
+a {
+  text-decoration: none;
+  color: var(--complement-secondary);
+  border: solid 2px var(--complement-secondary);
+  border-radius: 4px;
+  padding: 1% 2%;
+  font-size: var(--small-font);
+}
+
+.p-nav {
+  color: var(--complement-secondary);
+  margin-right: auto;
+  font-size: var(--small-font);
+}
+
+.input-area {
+  position: relative;
+
+  background-color: var(--complement-secondary);
+  width: 90%;
+  min-height: 50%;
+
+  border: solid 8px var(--secondary-color);
+  border-radius: 16px;
+}
+
+.crud-buttons {
+  position: absolute;
+  right: 0%;
+  bottom: 0%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 1em;
+  padding: 1%;
+}
+
+button {
+  padding: 1%;
+  border-radius: 4px;
+  background-color: var(--accent-color);
+
+  border: 4px solid var(--secondary-color);
+}
+
+.budget-display-area {
+  position: relative;
+
+  background-color: var(--complement-secondary);
+  width: 90%;
+  min-height: 30%;
+
+  border: solid 8px var(--secondary-color);
+  border-radius: 16px;
+}
+
+.budget-name {
+  color: var(--accent-color);
+}
