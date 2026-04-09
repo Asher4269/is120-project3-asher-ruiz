@@ -129,7 +129,7 @@ function display_row_in_table(type, item_name, amount) {
     total_savings_span.textContent = savings_total;
   }
 
-  display_net_income(total_array_span);
+  display_income_breakdown(total_array_span);
 }
 
 function sum_category(table_element) {
@@ -172,7 +172,7 @@ async function insert_rows() {
 
   display_row_in_table(type_inp.value, item_name_inp.value, amount_inp.value);
 
-  display_net_income(total_array_span);
+  display_income_breakdown(total_array_span);
 
   return data;
 }
@@ -249,12 +249,6 @@ function calculate_net_income(array_of_total_expense_spans) {
   return net_income * 12;
 }
 
-function display_net_income(array_of_total_expense_spans) {
-  let get_net_income = calculate_net_income(array_of_total_expense_spans);
-
-  net_income_span.textContent = "$" + get_net_income;
-}
-
 function calculate_social_security_tax(gross_income) {
   return gross_income * social_security_tax_rate;
 }
@@ -270,14 +264,14 @@ function calculate_state_tax(gross_income) {
 function calculate_federal_tax(gross_income) {
   let federal_payment = 0;
 
-  for (let index = 0; index < federal_tax_list.length; index++) {
-    let current_tax_percentage = federal_tax_list[index];
+  for (let index = 0; index < federal_tax_bracket.length; index++) {
+    let current_tax_percentage = federal_tax_bracket[index];
 
     if (index % 2 === 0) {
       continue;
     } else {
-      let current_upper_bracket = federal_tax_list[index + 1];
-      let current_lower_bracket = federal_tax_list[index - 1];
+      let current_upper_bracket = federal_tax_bracket[index + 1];
+      let current_lower_bracket = federal_tax_bracket[index - 1];
 
       let current_tax_owed;
 
@@ -296,19 +290,59 @@ function calculate_federal_tax(gross_income) {
       federal_payment += current_tax_owed;
     }
   }
+  return federal_payment;
 }
 
 function calculate_gross_income(
   net_income_needed,
   gross_income = net_income_needed,
 ) {
-  let checker = 0;
-
   deduction =
     calculate_social_security_tax(gross_income) +
     calculate_medicaid_tax(gross_income) +
     calculate_state_tax(gross_income) +
     calculate_federal_tax(gross_income);
+
+  let checker = gross_income - deduction;
+
+  let difference = checker - net_income_needed;
+
+  if (net_income_needed === checker) {
+    return gross_income;
+  }
+
+  let new_gross_income = gross_income - difference;
+
+  return calculate_gross_income(net_income_needed, new_gross_income);
+}
+
+function display_income_breakdown(array_of_total_expense_spans) {
+  // 1. Get net income (already yearly from your function)
+  let net_income = calculate_net_income(array_of_total_expense_spans);
+
+  // 2. Calculate gross income needed
+  let gross_income = calculate_gross_income(net_income);
+
+  // 3. Calculate taxes
+  let social_security = calculate_social_security_tax(gross_income);
+  let medicaid = calculate_medicaid_tax(gross_income);
+  let state_tax = calculate_state_tax(gross_income);
+  let federal_tax = calculate_federal_tax(gross_income);
+
+  // 4. Display everything
+  net_income_span.textContent = format_amount(net_income);
+  gross_income_span.textContent = format_amount(gross_income);
+  social_security_span.textContent = format_amount(social_security);
+  medicaid_span.textContent = format_amount(medicaid);
+  state_tax_span.textContent = format_amount(state_tax);
+  federal_tax_span.textContent = format_amount(federal_tax);
+}
+
+function format_amount(value_amount) {
+  return value_amount.toLocaleString("en-US", {
+    style: "currency",
+    currency: "USD",
+  }); // cool function from stack overflow
 }
 
 get_user_info();

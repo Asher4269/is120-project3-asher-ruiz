@@ -23,6 +23,8 @@
 body {
   position: relative;
 
+  background-color: var(--primary-color);
+
   min-height: 100vh;
 
   display: grid;
@@ -30,7 +32,7 @@ body {
     "header"
     "nav"
     "main";
-  grid-template-rows: 6% 12% auto;
+  grid-template-rows: 4% 6% auto;
 }
 
 header {
@@ -46,6 +48,8 @@ header {
 nav {
   grid-area: nav;
   position: sticky;
+  top: 0;
+  z-index: 100;
 
   background-color: var(--tertiary-color);
 
@@ -78,6 +82,7 @@ h1 {
 h2 {
   color: var(--secondary-color);
   padding: 1%;
+  font-size: var(--small-font);
 }
 
 h3 {
@@ -115,7 +120,7 @@ a {
 
   background-color: var(--complement-secondary);
   width: 90%;
-  min-height: 40%;
+  min-height: 30%;
 
   border: solid 8px var(--secondary-color);
   border-radius: 16px;
@@ -144,7 +149,7 @@ a {
 }
 
 .single-input input {
-  color: var(--tertiary-color);
+  color: var(--accent-color);
   font-size: var(--smallest-font);
   padding: 0.5%;
 
@@ -209,6 +214,8 @@ td {
   border: 4px solid var(--secondary-color);
   background-color: var(--primary-color);
   padding: 4px;
+
+  font-size: var(--smallest-font);
 }
 
 #income-calculator {
@@ -225,7 +232,41 @@ td {
   font-size: var(--small-font);
 
   justify-content: right;
-
+  color: var(--secondary-color);
   font-weight: 900;
+
+  border: 4px dashed var(--secondary-color);
+
+  padding: 0.5%;
+}
+
+#income-calculator p span {
   color: var(--accent-color);
+}
+
+/* * Small devices */
+@media (max-width: 600px) {
+  :root {
+    --small-font: 1rem;
+    --smallest-font: 0.65rem;
+    --heading-font: 2rem;
+  }
+}
+
+/* * Medium devices*/
+@media (min-width: 801px) and (max-width: 1024px) {
+  :root {
+    --small-font: 2rem;
+    --smallest-font: 1.25rem;
+    --heading-font: 3rem;
+  }
+}
+
+/* * Large devices */
+@media (min-width: 1025px) {
+  :root {
+    --small-font: 2.5rem;
+    --smallest-font: 1.75rem;
+    --heading-font: 4rem;
+  }
 }

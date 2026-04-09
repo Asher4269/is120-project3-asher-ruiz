@@ -17,6 +17,7 @@
       <p class="p-nav">Nav:</p>
       <a href="#create-budget">Create Budget</a>
       <a href="#display-budget">Budget Display</a>
+      <a href="#income-calculator">Income Calculator</a>
     </nav>
     <main>
       <!-- Input Area: This is where CRUD takes place. -->
@@ -81,7 +82,9 @@
 
       <!-- Display Area: This will display a table and ultimate calculation area that shows budget criteria to user based on budget name. -->
       <div id="display-budget" class="budget-display-area">
-        <h2>Displaying Budget: [<span class="budget-name"></span>]</h2>
+        <h2>
+          Displaying Budget (Monthly): [<span class="budget-name"></span>]
+        </h2>
         <!-- ! Come back and change these divs to tables. With Headings, and alter class to id with same value -->
         <h3>Expenses [<span id="expenses-total"></span>]</h3>
         <table>
@@ -113,7 +116,7 @@
           </thead>
           <tbody id="savings-category"></tbody>
         </table>
-        <h3>Income Calculator (Annual)</h3>
+        <h2>Income Calculator (Annual)</h2>
         <div id="income-calculator">
           <p>Net Income: <span id="net-income"></span></p>
           <p>Medicaid: <span id="medicaid"></span></p>
