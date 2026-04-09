@@ -43,6 +43,13 @@ const gross_income_span = document.querySelector("#gross-income");
 // Database Table Name
 let table_name = "Budget-Line-Items";
 
+// For Net Income Calculation
+let total_array_span = [
+  total_expenses_span,
+  total_budgets_span,
+  total_savings_span,
+];
+
 // Read in all Data
 async function get_all() {
   const { data, error } = await db.from(table_name).select("*");
@@ -111,6 +118,8 @@ function display_row_in_table(type, item_name, amount) {
     let savings_total = sum_category(table_savings_cat);
     total_savings_span.textContent = savings_total;
   }
+
+  display_net_income(total_array_span);
 }
 
 function sum_category(table_element) {
@@ -152,6 +161,8 @@ async function insert_rows() {
   }
 
   display_row_in_table(type_inp.value, item_name_inp.value, amount_inp.value);
+
+  display_net_income(total_array_span);
 
   return data;
 }
@@ -212,6 +223,26 @@ function get_user_info() {
       get_budget_name: saved_budget_name,
     };
   }
+}
+
+function calculate_net_income(array_of_total_expense_spans) {
+  let net_income = 0;
+
+  for (let span of array_of_total_expense_spans) {
+    let subtotal = span.textContent;
+    let subtotal_value = parseFloat(subtotal);
+    if (!isNaN(subtotal_value)) {
+      net_income += subtotal_value;
+    }
+  }
+
+  return net_income * 12;
+}
+
+function display_net_income(array_of_total_expense_spans) {
+  let get_net_income = calculate_net_income(array_of_total_expense_spans);
+
+  net_income_span.textContent = "$" + get_net_income;
 }
 
 get_user_info();
