@@ -75,6 +75,11 @@ async function get_all() {
 async function pull_user_budget() {
   let { get_user_name, get_budget_name } = get_user_info();
 
+  if (!get_user_name || !get_budget_name) {
+    alert("Please set a user name and budget name first!");
+    return;
+  }
+
   const { data, error } = await db
     .from(table_name)
     .select("*")
@@ -219,20 +224,14 @@ function get_user_info() {
   let saved_user_name = localStorage.getItem("user_name");
   let saved_budget_name = localStorage.getItem("budget_name");
 
-  if (saved_user_name === null) {
-    return null;
-  } else if (saved_budget_name === null) {
-    user_name_inp.value = saved_user_name;
-    return saved_user_name;
-  } else {
-    user_name_inp.value = saved_user_name;
-    budget_name_inp.value = saved_budget_name;
-    budget_name_display.textContent = saved_budget_name;
-    return {
-      get_user_name: saved_user_name,
-      get_budget_name: saved_budget_name,
-    };
-  }
+  user_name_inp.value = saved_user_name || "";
+  budget_name_inp.value = saved_budget_name || "";
+  budget_name_display.textContent = saved_budget_name || "";
+
+  return {
+    get_user_name: saved_user_name || null,
+    get_budget_name: saved_budget_name || null,
+  };
 }
 
 function calculate_net_income(array_of_total_expense_spans) {
@@ -345,6 +344,7 @@ function format_amount(value_amount) {
   }); // cool function from stack overflow
 }
 
+get_all();
 get_user_info();
 
 button_add_item.addEventListener("click", insert_rows);
