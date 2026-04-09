@@ -63,7 +63,7 @@ async function insert_rows(user_name, budget_name, type, item_name, amount) {
 async function update_row(row_id, updates) {
   const { data, error } = await db
     .from(table_name)
-    .update(updates) // { Amount: 250.0 } is solid syntax here for the updates argument
+    .update(updates) // { Amount: 250.0 } is an example solid syntax here for the updates argument
     .eq("id", row_id)
     .select();
 

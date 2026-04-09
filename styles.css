@@ -15,6 +15,7 @@
   --complement-secondary: #a3b18a;
 
   --small-font: 1.25rem;
+  --smallest-font: 0.75rem;
 
   --heading-font: 2.5rem;
 }
@@ -109,6 +110,45 @@ a {
   border: solid 8px var(--secondary-color);
   border-radius: 16px;
 }
+
+/* ! Serious Styling Problems Here. Come back and figure out. */
+.group-of-inputs {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5em;
+  padding: 1%;
+  align-items: start;
+}
+
+.single-input {
+  display: flex;
+  justify-content: end;
+  min-width: 60%;
+}
+
+.single-input label {
+  font-size: var(--small-font);
+  color: var(--tertiary-color);
+
+  font-weight: 900;
+}
+
+.single-input input {
+  color: var(--tertiary-color);
+  font-size: var(--smallest-font);
+  padding: 0.5%;
+
+  border: solid 4px var(--secondary-color);
+}
+
+.single-input select {
+  font-size: var(--smallest-font);
+  color: var(--tertiary-color);
+  border: solid 4px var(--secondary-color);
+  padding: 0.5%;
+}
+
+/* ! */
 
 .crud-buttons {
   position: absolute;

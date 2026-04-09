@@ -22,38 +22,56 @@
       <!-- Input Area: This is where CRUD takes place. -->
       <div id="create-budget" class="input-area">
         <h2>Input Line Item</h2>
-        <label for="user_name">Username:</label>
-        <input
-          type="text"
-          id="user_name"
-          name="user_name"
-          placeholder="enter username"
-          required
-        />
-        <label for="budget_name">Budget Name:</label>
-        <input
-          type="text"
-          id="budget_name"
-          name="budget_name"
-          placeholder="enter budget name"
-          required
-        />
-        <label for="type">Type:</label>
-        <input
-          type="text"
-          id="type"
-          name="type"
-          placeholder="[expense, budget, savings]"
-        />
-        <label for="name">Name of Item:</label>
-        <input
-          type="text"
-          id="name"
-          name="name"
-          placeholder="ex.Auto Insurance"
-        />
-        <label for="amount">Amount:</label>
-        <input type="text" id="amount" name="amount" placeholder="ex. 400.00" />
+        <div class="group-of-inputs">
+          <div class="single-input">
+            <label for="user_name">Username:</label>
+            <input
+              type="text"
+              id="user_name"
+              name="user_name"
+              placeholder="enter username"
+              required
+            />
+          </div>
+          <div class="single-input">
+            <label for="budget_name">Budget Name:</label>
+            <input
+              type="text"
+              id="budget_name"
+              name="budget_name"
+              placeholder="enter budget name"
+              required
+            />
+          </div>
+          <div class="single-input">
+            <label for="type">Type:</label>
+            <select name="type" id="type">
+              <option value="">--Select an option--</option>
+              <!-- Placeholder -->
+              <option value="Expense">Expenses</option>
+              <option value="Budget">Budget</option>
+              <option value="Savings">Savings</option>
+            </select>
+          </div>
+          <div class="single-input">
+            <label for="name">Name of Item:</label>
+            <input
+              type="text"
+              id="name"
+              name="name"
+              placeholder="ex.Auto Insurance"
+            />
+          </div>
+          <div class="single-input">
+            <label for="amount">Amount:</label>
+            <input
+              type="text"
+              id="amount"
+              name="amount"
+              placeholder="ex. 400.00"
+            />
+          </div>
+        </div>
         <div class="crud-buttons">
           <button class="alter-item">Alter Item</button>
           <button class="delete-item">Delete Item</button>
