@@ -13,7 +13,7 @@ My goal for this project was to fulfill my goal of creating an interactive budge
 
 ## What I learned while Building:
 
--
+I have learned that constantly referencing a database is inefficient, so I tried to make the most out of each query that I made (I don't imagine its completely optimized). When I could, I would reference my variables to the DOM rather than making another query to the database. It seemed like a good strategy was query -> DOM -> User. And then the user can make several requests to the DOM, and the DOM goes to the database by querying as needed. It was pretty fun to visualize that whole process and give my little attempt at optimizing it.
 
 ## What was difficult:
 
