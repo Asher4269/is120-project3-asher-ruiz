@@ -50,6 +50,16 @@ let total_array_span = [
   total_savings_span,
 ];
 
+// Tax Rates
+const social_security_tax_rate = 0.062; // This technically stops at a little above 6 figures, but none of us are making that anyways rip.
+const medicaid_tax_rate = 0.0145; // This can vary, will research more.
+const state_tax_rate = 0.03; // Is this Utah's Tax Rate?
+const federal_tax_bracket = [
+  0, 0.1, 23850, 0.12, 96950, 0.22, 206700, 0.24, 394600, 0.32, 501050, 0.35,
+  751600, 0.37, 100000000000000,
+]; // THIS ASSUMES MARRIED LOL, I Could work on more robustness later. Also is for 2025. Will Adjust
+const standardized_deduction = 29200; // Also assumes Married
+
 // Read in all Data
 async function get_all() {
   const { data, error } = await db.from(table_name).select("*");
@@ -243,6 +253,62 @@ function display_net_income(array_of_total_expense_spans) {
   let get_net_income = calculate_net_income(array_of_total_expense_spans);
 
   net_income_span.textContent = "$" + get_net_income;
+}
+
+function calculate_social_security_tax(gross_income) {
+  return gross_income * social_security_tax_rate;
+}
+
+function calculate_medicaid_tax(gross_income) {
+  return gross_income * medicaid_tax_rate;
+}
+
+function calculate_state_tax(gross_income) {
+  return gross_income * state_tax_rate;
+}
+
+function calculate_federal_tax(gross_income) {
+  let federal_payment = 0;
+
+  for (let index = 0; index < federal_tax_list.length; index++) {
+    let current_tax_percentage = federal_tax_list[index];
+
+    if (index % 2 === 0) {
+      continue;
+    } else {
+      let current_upper_bracket = federal_tax_list[index + 1];
+      let current_lower_bracket = federal_tax_list[index - 1];
+
+      let current_tax_owed;
+
+      if (gross_income >= current_upper_bracket) {
+        current_tax_owed =
+          (current_upper_bracket - current_lower_bracket) *
+          current_tax_percentage;
+      } else if (gross_income > current_lower_bracket) {
+        current_tax_owed =
+          (gross_income - current_lower_bracket) * current_tax_percentage;
+      } else {
+        current_tax_owed = 0;
+        break;
+      }
+
+      federal_payment += current_tax_owed;
+    }
+  }
+}
+
+function calculate_gross_income(
+  net_income_needed,
+  gross_income = net_income_needed,
+) {
+  let checker = 0;
+
+  deduction =
+    calculate_social_security_tax(gross_income) +
+    calculate_medicaid_tax(gross_income) +
+    calculate_state_tax(gross_income) +
+    calculate_federal_tax(gross_income);
 }
 
 get_user_info();
