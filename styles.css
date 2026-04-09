@@ -66,6 +66,8 @@ main {
   justify-content: space-around;
   align-items: center;
   gap: 2em;
+
+  padding: 3%;
 }
 
 h1 {
@@ -85,6 +87,12 @@ h3 {
   padding: 0.5%;
 
   text-decoration: underline;
+}
+
+#expenses-total,
+#budgets-total,
+#savings-total {
+  color: var(--accent-color);
 }
 
 a {
@@ -107,7 +115,7 @@ a {
 
   background-color: var(--complement-secondary);
   width: 90%;
-  min-height: 50%;
+  min-height: 40%;
 
   border: solid 8px var(--secondary-color);
   border-radius: 16px;
@@ -178,12 +186,46 @@ button {
 
   background-color: var(--complement-secondary);
   width: 90%;
-  min-height: 30%;
+
+  height: auto;
 
   border: solid 8px var(--secondary-color);
   border-radius: 16px;
 }
 
 .budget-name {
+  color: var(--accent-color);
+}
+
+table {
+  margin-left: 5%;
+  margin-top: 1%;
+  margin-bottom: 1%;
+  display: block;
+}
+
+th,
+td {
+  border: 4px solid var(--secondary-color);
+  background-color: var(--primary-color);
+  padding: 4px;
+}
+
+#income-calculator {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: start;
+  padding: 2%;
+  margin-left: 6%;
+  gap: 0.5em;
+}
+
+#income-calculator p {
+  font-size: var(--small-font);
+
+  justify-content: right;
+
+  font-weight: 900;
   color: var(--accent-color);
 }

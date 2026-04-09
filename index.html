@@ -74,7 +74,7 @@
         </div>
         <div class="crud-buttons">
           <button class="alter-item">Alter Item</button>
-          <button class="delete-item">Delete Item</button>
+          <button class="load-budget">Load My Budget</button>
           <button class="add-item">Add Item</button>
         </div>
       </div>
@@ -82,15 +82,46 @@
       <!-- Display Area: This will display a table and ultimate calculation area that shows budget criteria to user based on budget name. -->
       <div id="display-budget" class="budget-display-area">
         <h2>Displaying Budget: [<span class="budget-name"></span>]</h2>
-        <!-- ! Come back and change these divs to tables. With Headings? -->
-        <h3>Expenses</h3>
-        <div class="expenses-category"></div>
-        <h3>Budgets</h3>
-        <div class="budgets-category"></div>
-        <h3>Savings</h3>
-        <div class="savings-category"></div>
+        <!-- ! Come back and change these divs to tables. With Headings, and alter class to id with same value -->
+        <h3>Expenses [<span id="expenses-total"></span>]</h3>
+        <table>
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Amount</th>
+            </tr>
+          </thead>
+          <tbody id="expenses-category"></tbody>
+        </table>
+        <h3>Budgets [<span id="budgets-total"></span>]</h3>
+        <table>
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Amount</th>
+            </tr>
+          </thead>
+          <tbody id="budgets-category"></tbody>
+        </table>
+        <h3>Savings [<span id="savings-total"></span>]</h3>
+        <table>
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Amount</th>
+            </tr>
+          </thead>
+          <tbody id="savings-category"></tbody>
+        </table>
         <h3>Income Calculator</h3>
-        <div class="income-calculator"></div>
+        <div id="income-calculator">
+          <p>Net Income: <span id="net-income"></span></p>
+          <p>Medicaid: <span id="medicaid"></span></p>
+          <p>Social Security: <span id="social-security"></span></p>
+          <p>State Tax: <span id="state-tax"></span></p>
+          <p>Federal Tax: <span id="federal-tax"></span></p>
+          <p>Gross Income: <span id="gross-income"></span></p>
+        </div>
       </div>
     </main>
   </body>

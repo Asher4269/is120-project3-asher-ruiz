@@ -1,19 +1,24 @@
 // initialize database
-// const db = supabase.createClient(
-//   "https://picufxzhyglwmqukzyyl.supabase.co",
-//   "sb_publishable_51KQNADsbiEELlQxpjBBPQ_tRauQlrJ",
-// );
+const db = supabase.createClient(
+  "https://picufxzhyglwmqukzyyl.supabase.co",
+  "sb_publishable_51KQNADsbiEELlQxpjBBPQ_tRauQlrJ",
+);
 
 const body = document.querySelector("body");
 
 // Display or Alter Budget Name on Display Div
 const budget_name_display = document.querySelector(".budget-name");
 
-// Category Display Divs
-const div_expenses_cat = document.querySelector(".expenses-category");
-const div_budgets_cat = document.querySelector(".budgets-category");
-const div_savings_cat = document.querySelector(".savings-category");
-const div_income_calc_ = document.querySelector(".income-calculator");
+// Category Display Tables
+const table_expenses_cat = document.querySelector("#expenses-category");
+const table_budgets_cat = document.querySelector("#budgets-category");
+const table_savings_cat = document.querySelector("#savings-category");
+const table_income_calc_ = document.querySelector("#income-calculator");
+
+// Category Total Display Spans
+const total_expenses_span = document.querySelector("#expenses-total");
+const total_budgets_span = document.querySelector("#budgets-total");
+const total_savings_span = document.querySelector("#savings-total");
 
 // Input Elements
 const user_name_inp = document.querySelector("#user_name");
@@ -24,8 +29,16 @@ const amount_inp = document.querySelector("#amount");
 
 // Crud Buttons
 const button_alter_item = document.querySelector(".alter-item");
-const button_delete_item = document.querySelector(".delete-item");
+const button_load_budget = document.querySelector(".load-budget");
 const button_add_item = document.querySelector(".add-item");
+
+// Income Calc Display Spans
+const net_income_span = document.querySelector("#net-income");
+const medicaid_span = document.querySelector("#medicaid");
+const social_security_span = document.querySelector("#social-security");
+const state_tax_span = document.querySelector("#state-tax");
+const federal_tax_span = document.querySelector("#federal-tax");
+const gross_income_span = document.querySelector("#gross-income");
 
 // Database Table Name
 let table_name = "Budget-Line-Items";
@@ -33,7 +46,6 @@ let table_name = "Budget-Line-Items";
 // Read in all Data
 async function get_all() {
   const { data, error } = await db.from(table_name).select("*");
-  console.log(data);
 
   if (error) {
     console.error("Error fetching data:", error);
@@ -43,17 +55,93 @@ async function get_all() {
   return data;
 }
 
+async function pull_user_budget() {
+  let { get_user_name, get_budget_name } = get_user_info();
+
+  const { data, error } = await db
+    .from(table_name)
+    .select("*")
+    .eq("User_Name", get_user_name)
+    .eq("Budget_Name", get_budget_name);
+
+  if (error) {
+    console.error("Error fetching data:", error);
+    return;
+  }
+
+  for (let line_item of data) {
+    let get_type = line_item.Type;
+    let get_line_name = line_item.Item_Name;
+    let get_amount = line_item.Amount;
+
+    display_row_in_table(get_type, get_line_name, get_amount);
+  }
+
+  let expenses_total = sum_category(table_expenses_cat);
+  total_expenses_span.textContent = expenses_total;
+
+  let budgets_total = sum_category(table_budgets_cat);
+  total_budgets_span.textContent = budgets_total;
+
+  let savings_total = sum_category(table_savings_cat);
+  total_savings_span.textContent = savings_total;
+}
+
+function display_row_in_table(type, item_name, amount) {
+  let tr = document.createElement("tr");
+  let td1 = document.createElement("td");
+  let td2 = document.createElement("td");
+
+  td1.textContent = item_name;
+  td2.textContent = amount;
+
+  tr.appendChild(td1);
+  tr.appendChild(td2);
+
+  if (type === "Expenses") {
+    table_expenses_cat.appendChild(tr);
+    let expenses_total = sum_category(table_expenses_cat);
+    total_expenses_span.textContent = expenses_total;
+  } else if (type === "Budgets") {
+    table_budgets_cat.appendChild(tr);
+    let budgets_total = sum_category(table_budgets_cat);
+    total_budgets_span.textContent = budgets_total;
+  } else {
+    table_savings_cat.appendChild(tr);
+    let savings_total = sum_category(table_savings_cat);
+    total_savings_span.textContent = savings_total;
+  }
+}
+
+function sum_category(table_element) {
+  let total = 0;
+
+  let rows = table_element.querySelectorAll("tr");
+
+  rows.forEach((row) => {
+    let td_amount = row.children[1];
+    if (!td_amount) return;
+
+    let amount_value = parseFloat(td_amount.textContent);
+    if (!isNaN(amount_value)) {
+      total += amount_value;
+    }
+  });
+
+  return total;
+}
+
 // Insert Row(s)
-async function insert_rows(user_name, budget_name, type, item_name, amount) {
+async function insert_rows() {
   const { data, error } = await db
     .from(table_name)
     .insert([
       {
-        User_Name: user_name,
-        Budget_Name: budget_name,
-        Type: type,
-        Item_Name: item_name,
-        Amount: amount,
+        User_Name: user_name_inp.value,
+        Budget_Name: budget_name_inp.value,
+        Type: type_inp.value,
+        Item_Name: item_name_inp.value,
+        Amount: amount_inp.value,
       },
     ])
     .select();
@@ -62,6 +150,8 @@ async function insert_rows(user_name, budget_name, type, item_name, amount) {
     console.error("Insert failed:", error);
     return null;
   }
+
+  display_row_in_table(type_inp.value, item_name_inp.value, amount_inp.value);
 
   return data;
 }
@@ -96,6 +186,7 @@ async function delete_row(user_name, budget_name, item_name) {
   }
 }
 
+// FIGURE OUT HOW TO PROPERLY INCORPORATE THIS
 function save_user_info() {
   localStorage.setItem("user_name", user_name_inp.value);
   localStorage.setItem("budget_name", budget_name_inp.value);
@@ -111,14 +202,19 @@ function get_user_info() {
     return null;
   } else if (saved_budget_name === null) {
     user_name_inp.value = saved_user_name;
+    return saved_user_name;
   } else {
     user_name_inp.value = saved_user_name;
     budget_name_inp.value = saved_budget_name;
     budget_name_display.textContent = saved_budget_name;
+    return {
+      get_user_name: saved_user_name,
+      get_budget_name: saved_budget_name,
+    };
   }
 }
 
 get_user_info();
 
-button_add_item.addEventListener("click", save_user_info);
-//get_all();
+button_add_item.addEventListener("click", insert_rows);
+button_load_budget.addEventListener("click", pull_user_budget);
