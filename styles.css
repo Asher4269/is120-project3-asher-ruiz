@@ -45,6 +45,7 @@ header {
 
 nav {
   grid-area: nav;
+  position: sticky;
 
   background-color: var(--tertiary-color);
 
@@ -78,7 +79,8 @@ h2 {
 }
 
 h3 {
-  color: var(--accent-color);
+  color: var(--tertiary-color);
+  font-size: var(--small-font);
   margin-left: 4%;
   padding: 0.5%;
 
