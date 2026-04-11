@@ -60,18 +60,7 @@ const federal_tax_bracket = [
 ]; // THIS ASSUMES MARRIED LOL, I Could work on more robustness later. Also is for 2025. Will Adjust
 const standardized_deduction = 29200; // Also assumes Married
 
-// Read in all Data
-async function get_all() {
-  const { data, error } = await db.from(table_name).select("*");
-
-  if (error) {
-    console.error("Error fetching data:", error);
-    return;
-  }
-
-  return data;
-}
-
+// * Reads in Relevant Budget Data
 async function pull_user_budget() {
   table_expenses_cat.innerHTML = "";
   table_budgets_cat.innerHTML = "";
@@ -113,6 +102,7 @@ async function pull_user_budget() {
   total_savings_span.textContent = savings_total;
 }
 
+// * Logic to create a row of information in the table. Takes inputs based on the database query.
 function display_row_in_table(type, item_name, amount) {
   let tr = document.createElement("tr");
   let td1 = document.createElement("td");
@@ -160,6 +150,7 @@ function display_row_in_table(type, item_name, amount) {
   display_income_breakdown(total_array_span);
 }
 
+// * Function that returns the sum of all amounts in a table
 function sum_category(table_element) {
   let total = 0;
 
@@ -178,7 +169,7 @@ function sum_category(table_element) {
   return format_amount(total);
 }
 
-// Insert Row(s)
+// * Insert Row(s) is how I add rows(budget-items) to the budget data
 async function insert_rows() {
   const { data, error } = await db
     .from(table_name)
@@ -205,7 +196,7 @@ async function insert_rows() {
   return data;
 }
 
-// Update Amount in Row
+// * Update Amount in a given row to a new amount based on the generated input box
 async function update_row(row, new_amount) {
   let { get_user_name, get_budget_name } = get_user_info();
 
@@ -234,6 +225,8 @@ async function update_row(row, new_amount) {
   return data;
 }
 
+// * When edit is clicked, this mode is triggered, where previous buttons are hidden and a new submit button enters. This waits for user to hit submit before
+// * altering database
 function enter_edit_mode(e) {
   const button = e.target;
   const row = button.closest("tr");
@@ -241,7 +234,6 @@ function enter_edit_mode(e) {
   const cells = row.querySelectorAll("td");
   const action_div = row.querySelector("div");
 
-  const item_cell = cells[0];
   const amount_cell = cells[1];
 
   const current_amount = stringMoney_to_float(amount_cell.textContent);
@@ -265,7 +257,7 @@ function enter_edit_mode(e) {
   submit_button.addEventListener("click", () => update_row(row, input.value)); // Chat helped me figure this func out. Would love to learn more about =>
 }
 
-// Delete Row by user_name, budget_name, and item_name ###### SHOULD EXPAND THIS TO BE ABLE TO DELETE BUDGET_NAMES IN THEIR ENTIRETY
+// * Deletes a row based on user data and item name.
 async function delete_row(e) {
   let { get_user_name, get_budget_name } = get_user_info();
 
@@ -281,7 +273,8 @@ async function delete_row(e) {
     .delete()
     .eq("User_Name", get_user_name)
     .eq("Budget_Name", get_budget_name)
-    .eq("Item_Name", item_name);
+    .eq("Item_Name", item_name)
+    .eq("Amount", amount);
 
   if (error) {
     console.error("Delete failed:", error);
@@ -292,12 +285,13 @@ async function delete_row(e) {
   display_income_breakdown(total_array_span);
 }
 
-// FIGURE OUT HOW TO PROPERLY INCORPORATE THIS
+// * Ensures that Username and Budget name and saved into local storage when process initiates. This will help with queries all throughout.
 function save_user_info() {
   localStorage.setItem("user_name", user_name_inp.value);
   localStorage.setItem("budget_name", budget_name_inp.value);
 }
 
+// * Retrieves user info from local storage.
 function get_user_info() {
   save_user_info();
 
@@ -314,6 +308,7 @@ function get_user_info() {
   };
 }
 
+// * Sums up categorical totals and returns net income based on user's total expenses needed.
 function calculate_net_income(array_of_total_expense_spans) {
   let net_income = 0;
 
@@ -328,6 +323,8 @@ function calculate_net_income(array_of_total_expense_spans) {
   return net_income * 12;
 }
 
+// * Following Functions are just short cuts to get specific tax burden amounts.
+
 function calculate_social_security_tax(gross_income) {
   return gross_income * social_security_tax_rate;
 }
@@ -340,6 +337,7 @@ function calculate_state_tax(gross_income) {
   return gross_income * state_tax_rate;
 }
 
+// * This one had to be complicated because of Bracketed Tax System. Luckily I already had something like this in python.
 function calculate_federal_tax(gross_income) {
   let adjusted_gross_income = gross_income - standardized_deduction;
   let federal_payment = 0;
@@ -435,8 +433,6 @@ function format_amount(value_amount) {
 function stringMoney_to_float(amount) {
   return parseFloat(amount.replace(/[^0-9.-]+/g, ""));
 }
-
-get_all();
 
 button_add_item.addEventListener("click", insert_rows);
 button_load_budget.addEventListener("click", pull_user_budget);
