@@ -30,6 +30,7 @@ const amount_inp = document.querySelector("#amount");
 // Crud Buttons [Update and Delete are made in budget-line generation]
 const button_load_budget = document.querySelector(".load-budget");
 const button_add_item = document.querySelector(".add-item");
+const button_display_breakdown = document.querySelector("#income-breakdown");
 
 // Income Calc Display Spans
 const net_income_span = document.querySelector("#net-income");
@@ -121,8 +122,10 @@ function display_row_in_table(type, item_name, amount) {
   delete_button.dataset.item = item_name;
   delete_button.dataset.amount = amount;
 
+  let formatted_amount = format_amount(amount);
+
   td1.textContent = item_name;
-  td2.textContent = format_amount(amount);
+  td2.textContent = formatted_amount;
   edit_button.textContent = "Edit";
   delete_button.textContent = "Delete";
 
@@ -146,8 +149,6 @@ function display_row_in_table(type, item_name, amount) {
     let savings_total = sum_category(table_savings_cat);
     total_savings_span.textContent = savings_total;
   }
-
-  display_income_breakdown(total_array_span);
 }
 
 // * Function that returns the sum of all amounts in a table
@@ -190,8 +191,6 @@ async function insert_rows() {
   }
 
   display_row_in_table(type_inp.value, item_name_inp.value, amount_inp.value);
-
-  display_income_breakdown(total_array_span);
 
   return data;
 }
@@ -281,8 +280,6 @@ async function delete_row(e) {
   } else {
     row.remove(); // cool little function from chat
   }
-
-  display_income_breakdown(total_array_span);
 }
 
 // * Ensures that Username and Budget name and saved into local storage when process initiates. This will help with queries all throughout.
@@ -369,9 +366,13 @@ function calculate_federal_tax(gross_income) {
       federal_payment += current_tax_owed;
     }
   }
-  return federal_payment;
+  if (federal_payment > 0) {
+    return federal_payment;
+  }
+  return 0;
 }
 
+// * Recursively Finds the total gross_income needed since federal tax is bracketed, so remains an everchanging percentage.
 function calculate_gross_income(
   net_income_needed,
   gross_income = net_income_needed,
@@ -386,7 +387,7 @@ function calculate_gross_income(
 
   let difference = checker - net_income_needed;
 
-  if (net_income_needed === checker) {
+  if (Math.abs(net_income_needed - checker) < 0.01) {
     return gross_income;
   }
 
@@ -395,13 +396,15 @@ function calculate_gross_income(
   return calculate_gross_income(net_income_needed, new_gross_income);
 }
 
+// * Figured it would be nice to tell user how many dollars they would need per hour.
 function deduce_hourly_wage(gross_income) {
   return gross_income / 2000;
 }
 
-function display_income_breakdown(array_of_total_expense_spans) {
+// * Shows income breakdown to user
+function display_income_breakdown() {
   // 1. Get net income (already yearly from your function)
-  let net_income = calculate_net_income(array_of_total_expense_spans);
+  let net_income = calculate_net_income(total_array_span);
 
   // 2. Calculate gross income needed
   let gross_income = calculate_gross_income(net_income);
@@ -423,6 +426,8 @@ function display_income_breakdown(array_of_total_expense_spans) {
   hourly_wage_span.textContent = format_amount(hourly_wage);
 }
 
+// * Following two functions just help me flip-flop between floats and currency so that the database doesn't accidentally receive a string
+// * and the user can read the money more easily.
 function format_amount(value_amount) {
   return value_amount.toLocaleString("en-US", {
     style: "currency",
@@ -434,5 +439,7 @@ function stringMoney_to_float(amount) {
   return parseFloat(amount.replace(/[^0-9.-]+/g, ""));
 }
 
+// Event Listeners
 button_add_item.addEventListener("click", insert_rows);
 button_load_budget.addEventListener("click", pull_user_budget);
+button_display_breakdown.addEventListener("click", display_income_breakdown);
