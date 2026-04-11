@@ -114,11 +114,29 @@ function display_row_in_table(type, item_name, amount) {
   let td1 = document.createElement("td");
   let td2 = document.createElement("td");
 
+  let button_wrapper = document.createElement("div");
+
+  let edit_button = document.createElement("button");
+
+  let delete_button = document.createElement("button");
+
+  delete_button.style.backgroundColor = "red";
+  delete_button.addEventListener("click", delete_row);
+
+  delete_button.dataset.item = item_name;
+  delete_button.dataset.amount = amount;
+
   td1.textContent = item_name;
-  td2.textContent = amount;
+  td2.textContent = format_amount(amount);
+  edit_button.textContent = "Edit";
+  delete_button.textContent = "Delete";
+
+  button_wrapper.appendChild(edit_button);
+  button_wrapper.appendChild(delete_button);
 
   tr.appendChild(td1);
   tr.appendChild(td2);
+  tr.appendChild(button_wrapper);
 
   if (type === "Expenses") {
     table_expenses_cat.appendChild(tr);
@@ -146,13 +164,13 @@ function sum_category(table_element) {
     let td_amount = row.children[1];
     if (!td_amount) return;
 
-    let amount_value = parseFloat(td_amount.textContent);
+    let amount_value = stringMoney_to_float(td_amount.textContent);
     if (!isNaN(amount_value)) {
       total += amount_value;
     }
   });
 
-  return total;
+  return format_amount(total);
 }
 
 // Insert Row(s)
@@ -199,16 +217,28 @@ async function update_row(row_id, updates) {
 }
 
 // Delete Row by user_name, budget_name, and item_name ###### SHOULD EXPAND THIS TO BE ABLE TO DELETE BUDGET_NAMES IN THEIR ENTIRETY
-async function delete_row(user_name, budget_name, item_name) {
+async function delete_row(e) {
+  let { get_user_name, get_budget_name } = get_user_info();
+
+  const button = e.target;
+
+  const item_name = button.dataset.item;
+  const amount = stringMoney_to_float(button.dataset.amount);
+
+  const row = button.closest("tr");
+
   const { error } = await db
     .from(table_name)
     .delete()
-    .eq("User_Name", user_name)
-    .eq("Budget_Name", budget_name)
-    .eq("Item_Name", item_name);
+    .eq("User_Name", get_user_name)
+    .eq("Budget_Name", get_budget_name)
+    .eq("Item_Name", item_name)
+    .eq("Amount", amount);
 
   if (error) {
     console.error("Delete failed:", error);
+  } else {
+    row.remove(); // cool little function from chat
   }
 }
 
@@ -239,7 +269,7 @@ function calculate_net_income(array_of_total_expense_spans) {
 
   for (let span of array_of_total_expense_spans) {
     let subtotal = span.textContent;
-    let subtotal_value = parseFloat(subtotal);
+    let subtotal_value = stringMoney_to_float(subtotal);
     if (!isNaN(subtotal_value)) {
       net_income += subtotal_value;
     }
@@ -342,6 +372,10 @@ function format_amount(value_amount) {
     style: "currency",
     currency: "USD",
   }); // cool function from stack overflow
+}
+
+function stringMoney_to_float(amount) {
+  return parseFloat(amount.replace(/[^0-9.-]+/g, ""));
 }
 
 get_all();

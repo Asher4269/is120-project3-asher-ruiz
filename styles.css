@@ -217,6 +217,15 @@ td {
   font-size: var(--smallest-font);
 }
 
+tr div {
+  display: flex;
+  align-items: center;
+}
+
+tr div button {
+  margin: 2%;
+}
+
 #income-calculator {
   display: flex;
   flex-direction: column;
