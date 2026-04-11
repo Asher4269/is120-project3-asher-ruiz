@@ -73,6 +73,10 @@ async function get_all() {
 }
 
 async function pull_user_budget() {
+  table_expenses_cat.innerHTML = "";
+  table_budgets_cat.innerHTML = "";
+  table_savings_cat.innerHTML = "";
+
   let { get_user_name, get_budget_name } = get_user_info();
 
   if (!get_user_name || !get_budget_name) {
@@ -122,6 +126,7 @@ function display_row_in_table(type, item_name, amount) {
 
   delete_button.style.backgroundColor = "red";
   delete_button.addEventListener("click", delete_row);
+  edit_button.addEventListener("click", enter_edit_mode);
 
   delete_button.dataset.item = item_name;
   delete_button.dataset.amount = amount;
@@ -200,12 +205,22 @@ async function insert_rows() {
   return data;
 }
 
-// Update Amount in Row by ID
-async function update_row(row_id, updates) {
+// Update Amount in Row
+async function update_row(row, new_amount) {
+  let { get_user_name, get_budget_name } = get_user_info();
+
+  const cells = row.querySelectorAll("td");
+
+  const item_name = cells[0].textContent;
+
+  const float_amount = stringMoney_to_float(new_amount);
+
   const { data, error } = await db
     .from(table_name)
-    .update(updates) // { Amount: 250.0 } is an example solid syntax here for the updates argument
-    .eq("id", row_id)
+    .update({ Amount: float_amount })
+    .eq("User_Name", get_user_name)
+    .eq("Budget_Name", get_budget_name)
+    .eq("Item_Name", item_name)
     .select();
 
   if (error) {
@@ -213,7 +228,41 @@ async function update_row(row_id, updates) {
     return null;
   }
 
+  // Reload page
+  pull_user_budget();
+
   return data;
+}
+
+function enter_edit_mode(e) {
+  const button = e.target;
+  const row = button.closest("tr");
+
+  const cells = row.querySelectorAll("td");
+  const action_div = row.querySelector("div");
+
+  const item_cell = cells[0];
+  const amount_cell = cells[1];
+
+  const current_amount = stringMoney_to_float(amount_cell.textContent);
+
+  action_div.innerHTML = "";
+
+  // New Submit button lol
+  const submit_button = document.createElement("button");
+  submit_button.textContent = "Submit";
+  action_div.appendChild(submit_button);
+
+  // Here I'm gonna replace the amount cell with an input box to improve UI experience (so that they don't have to scroll up)
+  let input = document.createElement("input");
+  input.type = "text";
+  input.value = current_amount;
+  input.classList.add("edit-input");
+
+  amount_cell.textContent = "";
+  amount_cell.appendChild(input);
+
+  submit_button.addEventListener("click", () => update_row(row, input.value)); // Chat helped me figure this func out. Would love to learn more about =>
 }
 
 // Delete Row by user_name, budget_name, and item_name ###### SHOULD EXPAND THIS TO BE ABLE TO DELETE BUDGET_NAMES IN THEIR ENTIRETY
@@ -232,8 +281,7 @@ async function delete_row(e) {
     .delete()
     .eq("User_Name", get_user_name)
     .eq("Budget_Name", get_budget_name)
-    .eq("Item_Name", item_name)
-    .eq("Amount", amount);
+    .eq("Item_Name", item_name);
 
   if (error) {
     console.error("Delete failed:", error);

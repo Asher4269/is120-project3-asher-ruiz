@@ -153,6 +153,11 @@ a {
   border: solid 4px var(--secondary-color);
 }
 
+.edit-input {
+  color: var(--accent-color);
+  font-size: var(--smallest-font);
+}
+
 .single-input select {
   font-size: var(--smallest-font);
   color: var(--tertiary-color);
