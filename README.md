@@ -17,12 +17,12 @@ I have learned that constantly referencing a database is inefficient, so I tried
 
 ## What was difficult:
 
-Getting Local Storage to access column data to display user-specific budget lines was insanely difficult.
+Getting Local Storage to access column data to display user-specific budget lines was insanely difficult. Chat GPT taught me how to pull data relationally based on where they are .closest to the button. This is how I eventually got my delete button to pull from the row and then make the query to the database instead of putting that burden onto the user.
 
 ## Specifically, what did I learn about Supabase and CRUD:
 
--
+I learned that designing a table base might be the most important part. It needs to be practical so that using crud to the database is as simple as it can be. I also learned how many amazing things we can do when we store things in a database.
 
 ## Anything I would like to add or change for Project 3 in future:
 
--
+I might want to add little graphs to my budget program to show like interactive pie charts or something along those lines.
