@@ -221,6 +221,8 @@ function save_user_info() {
 }
 
 function get_user_info() {
+  save_user_info(); // The only way I could get things to work both ways
+
   let saved_user_name = localStorage.getItem("user_name");
   let saved_budget_name = localStorage.getItem("budget_name");
 

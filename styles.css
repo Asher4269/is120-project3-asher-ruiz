@@ -182,7 +182,7 @@ button {
 
   color: var(--primary-color);
 
-  font-size: var(--small-font);
+  font-size: var(--smallest-font);
 }
 
 .budget-display-area {

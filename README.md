@@ -17,7 +17,7 @@ I have learned that constantly referencing a database is inefficient, so I tried
 
 ## What was difficult:
 
--
+Getting Local Storage to access column data to display user-specific budget lines was insanely difficult.
 
 ## Specifically, what did I learn about Supabase and CRUD:
 
