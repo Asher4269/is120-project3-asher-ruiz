@@ -216,12 +216,10 @@ async function delete_row(user_name, budget_name, item_name) {
 function save_user_info() {
   localStorage.setItem("user_name", user_name_inp.value);
   localStorage.setItem("budget_name", budget_name_inp.value);
-
-  get_user_info();
 }
 
 function get_user_info() {
-  save_user_info(); // The only way I could get things to work both ways
+  save_user_info();
 
   let saved_user_name = localStorage.getItem("user_name");
   let saved_budget_name = localStorage.getItem("budget_name");
@@ -347,7 +345,6 @@ function format_amount(value_amount) {
 }
 
 get_all();
-get_user_info();
 
 button_add_item.addEventListener("click", insert_rows);
 button_load_budget.addEventListener("click", pull_user_budget);
