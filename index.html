@@ -47,11 +47,9 @@
           <div class="single-input">
             <label for="type">Type:</label>
             <select name="type" id="type">
-              <option value="">--Select an option--</option>
-              <!-- Placeholder -->
-              <option value="Expenses">Expenses</option>
-              <option value="Budgets">Budgets</option>
-              <option value="Savings">Savings</option>
+              <option value="Expenses" selected>- -- -Expenses- -- -</option>
+              <option value="Budgets">- -- -Budgets- -- -</option>
+              <option value="Savings">- -- -Savings- -- -</option>
             </select>
           </div>
           <div class="single-input">
@@ -124,6 +122,11 @@
           <p>State Tax: <span id="state-tax"></span></p>
           <p>Federal Tax: <span id="federal-tax"></span></p>
           <p>Gross Income: <span id="gross-income"></span></p>
+          <br />
+          <p>
+            Hourly Wage Needed: [<span class="hourly-wage"></span>]<em></em>
+              (Assuming 40-hour work week)</em>
+          </p>
         </div>
       </div>
     </main>

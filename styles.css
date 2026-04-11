@@ -252,6 +252,10 @@ tr div button {
   color: var(--accent-color);
 }
 
+.hourly-wage {
+  color: var(--accent-color);
+}
+
 /* * Small devices */
 @media (max-width: 600px) {
   :root {

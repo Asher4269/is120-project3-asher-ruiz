@@ -26,3 +26,4 @@ I learned that designing a table base might be the most important part. It needs
 ## Anything I would like to add or change for Project 3 in future:
 
 I might want to add little graphs to my budget program to show like interactive pie charts or something along those lines.
+I would also like to include a little feature, personally, where my budget can calculate income down to months or weeks!

@@ -27,8 +27,7 @@ const type_inp = document.querySelector("#type");
 const item_name_inp = document.querySelector("#name");
 const amount_inp = document.querySelector("#amount");
 
-// Crud Buttons
-const button_alter_item = document.querySelector(".alter-item");
+// Crud Buttons [Update and Delete are made in budget-line generation]
 const button_load_budget = document.querySelector(".load-budget");
 const button_add_item = document.querySelector(".add-item");
 
@@ -39,6 +38,7 @@ const social_security_span = document.querySelector("#social-security");
 const state_tax_span = document.querySelector("#state-tax");
 const federal_tax_span = document.querySelector("#federal-tax");
 const gross_income_span = document.querySelector("#gross-income");
+const hourly_wage_span = document.querySelector(".hourly-wage");
 
 // Database Table Name
 let table_name = "Budget-Line-Items";
@@ -240,6 +240,8 @@ async function delete_row(e) {
   } else {
     row.remove(); // cool little function from chat
   }
+
+  display_income_breakdown(total_array_span);
 }
 
 // FIGURE OUT HOW TO PROPERLY INCORPORATE THIS
@@ -291,6 +293,7 @@ function calculate_state_tax(gross_income) {
 }
 
 function calculate_federal_tax(gross_income) {
+  let adjusted_gross_income = gross_income - standardized_deduction;
   let federal_payment = 0;
 
   for (let index = 0; index < federal_tax_bracket.length; index++) {
@@ -304,13 +307,14 @@ function calculate_federal_tax(gross_income) {
 
       let current_tax_owed;
 
-      if (gross_income >= current_upper_bracket) {
+      if (adjusted_gross_income >= current_upper_bracket) {
         current_tax_owed =
           (current_upper_bracket - current_lower_bracket) *
           current_tax_percentage;
-      } else if (gross_income > current_lower_bracket) {
+      } else if (adjusted_gross_income > current_lower_bracket) {
         current_tax_owed =
-          (gross_income - current_lower_bracket) * current_tax_percentage;
+          (adjusted_gross_income - current_lower_bracket) *
+          current_tax_percentage;
       } else {
         current_tax_owed = 0;
         break;
@@ -345,6 +349,10 @@ function calculate_gross_income(
   return calculate_gross_income(net_income_needed, new_gross_income);
 }
 
+function deduce_hourly_wage(gross_income) {
+  return gross_income / 2000;
+}
+
 function display_income_breakdown(array_of_total_expense_spans) {
   // 1. Get net income (already yearly from your function)
   let net_income = calculate_net_income(array_of_total_expense_spans);
@@ -357,6 +365,7 @@ function display_income_breakdown(array_of_total_expense_spans) {
   let medicaid = calculate_medicaid_tax(gross_income);
   let state_tax = calculate_state_tax(gross_income);
   let federal_tax = calculate_federal_tax(gross_income);
+  let hourly_wage = deduce_hourly_wage(gross_income);
 
   // 4. Display everything
   net_income_span.textContent = format_amount(net_income);
@@ -365,6 +374,7 @@ function display_income_breakdown(array_of_total_expense_spans) {
   medicaid_span.textContent = format_amount(medicaid);
   state_tax_span.textContent = format_amount(state_tax);
   federal_tax_span.textContent = format_amount(federal_tax);
+  hourly_wage_span.textContent = format_amount(hourly_wage);
 }
 
 function format_amount(value_amount) {
