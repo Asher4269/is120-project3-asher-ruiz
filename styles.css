@@ -16,6 +16,7 @@
 
   --small-font: 1.25rem;
   --smallest-font: 0.75rem;
+  --minimal-font: 0.5rem;
 
   --heading-font: 2.5rem;
 }
@@ -69,6 +70,42 @@ main {
   gap: 2em;
 
   padding: 3%;
+}
+
+.question-icon {
+  position: absolute;
+  right: 0em;
+  width: 5%;
+  margin: 1%;
+  cursor: pointer;
+  transition: 0.5s ease;
+}
+
+.question-icon:hover {
+  background-color: var(--tertiary-color);
+  border-radius: 100% 100% 100% 0%;
+}
+
+.help-tooltip {
+  position: absolute;
+  top: 15%;
+  right: 5%;
+  z-index: 1000;
+  background-color: var(--primary-color);
+  color: var(--secondary-color);
+  font-size: var(--minimal-font);
+
+  border-radius: 15px;
+  border: solid 4px var(--secondary-color);
+  width: 25%;
+  opacity: 0.75;
+
+  transition: 1s ease;
+}
+
+.hidden {
+  opacity: 0;
+  display: none;
 }
 
 h1 {
@@ -283,6 +320,7 @@ tr div button {
     --small-font: 1rem;
     --smallest-font: 0.65rem;
     --heading-font: 2rem;
+    --minimal-font: 0.6rem;
   }
 
   .crud-buttons {
@@ -296,6 +334,7 @@ tr div button {
     --small-font: 2rem;
     --smallest-font: 1.25rem;
     --heading-font: 3rem;
+    --minimal-font: 1rem;
   }
 }
 
@@ -305,5 +344,6 @@ tr div button {
     --small-font: 2.5rem;
     --smallest-font: 1.75rem;
     --heading-font: 4rem;
+    --minimal-font: 1.5rem;
   }
 }

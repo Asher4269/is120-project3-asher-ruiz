@@ -41,6 +41,17 @@ const federal_tax_span = document.querySelector("#federal-tax");
 const gross_income_span = document.querySelector("#gross-income");
 const hourly_wage_span = document.querySelector(".hourly-wage");
 
+// Help Icon
+const help_icon = document.querySelector(".question-icon");
+const tool_tip = document.querySelector(".help-tooltip");
+
+help_icon.addEventListener("mouseenter", () => {
+  tool_tip.classList.toggle("hidden");
+});
+help_icon.addEventListener("mouseleave", () => {
+  tool_tip.classList.add("hidden");
+});
+
 // Database Table Name
 let table_name = "Budget-Line-Items";
 
