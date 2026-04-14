@@ -98,7 +98,8 @@ main {
   border-radius: 15px;
   border: solid 4px var(--secondary-color);
   width: 25%;
-  opacity: 0.75;
+  opacity: 0.85;
+  padding: 0.5%;
 
   transition: 1s ease;
 }
@@ -344,6 +345,6 @@ tr div button {
     --small-font: 2.5rem;
     --smallest-font: 1.75rem;
     --heading-font: 4rem;
-    --minimal-font: 1.5rem;
+    --minimal-font: 1.25rem;
   }
 }
