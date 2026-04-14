@@ -2,9 +2,12 @@
 
 Asher Ruiz
 
-To Tanner: If you want to pull up an already existing random budget type:
+To Tanner: If you want to pull up an already existing random budget type in the following:
+
 Username: Money Man 3000
+
 Budget Name: My Budget
+
 This one is pre-built!
 
 ## Edit Button (Update Button)
