@@ -97,11 +97,12 @@ async function pull_user_budget() {
   }
 
   for (let line_item of data) {
+    let get_id = line_item.id;
     let get_type = line_item.Type;
     let get_line_name = line_item.Item_Name;
     let get_amount = line_item.Amount;
 
-    display_row_in_table(get_type, get_line_name, get_amount);
+    display_row_in_table(get_id, get_type, get_line_name, get_amount);
   }
 
   let expenses_total = sum_category(table_expenses_cat);
@@ -115,8 +116,11 @@ async function pull_user_budget() {
 }
 
 // * Logic to create a row of information in the table. Takes inputs based on the database query.
-function display_row_in_table(type, item_name, amount) {
+function display_row_in_table(id, type, item_name, amount) {
   let tr = document.createElement("tr");
+
+  tr.dataset.id = id; // this is for editing and deleting
+
   let td1 = document.createElement("td");
   let td2 = document.createElement("td");
 
@@ -130,8 +134,8 @@ function display_row_in_table(type, item_name, amount) {
   delete_button.addEventListener("click", delete_row);
   edit_button.addEventListener("click", enter_edit_mode);
 
-  delete_button.dataset.item = item_name;
-  delete_button.dataset.amount = amount;
+  delete_button.dataset.id = id;
+  edit_button.dataset.id = id;
 
   let formatted_amount = format_amount(amount);
 
@@ -201,27 +205,28 @@ async function insert_rows() {
     return null;
   }
 
-  display_row_in_table(type_inp.value, item_name_inp.value, amount_inp.value);
+  const new_item = data[0];
+
+  display_row_in_table(
+    new_item.id,
+    new_item.Type,
+    new_item.Item_Name,
+    new_item.Amount,
+  );
 
   return data;
 }
 
 // * Update Amount in a given row to a new amount based on the generated input box
 async function update_row(row, new_amount) {
-  let { get_user_name, get_budget_name } = get_user_info();
-
-  const cells = row.querySelectorAll("td");
-
-  const item_name = cells[0].textContent;
+  const id = row.dataset.id;
 
   const float_amount = stringMoney_to_float(new_amount);
 
   const { data, error } = await db
     .from(table_name)
     .update({ Amount: float_amount })
-    .eq("User_Name", get_user_name)
-    .eq("Budget_Name", get_budget_name)
-    .eq("Item_Name", item_name)
+    .eq("id", id)
     .select();
 
   if (error) {
@@ -229,7 +234,6 @@ async function update_row(row, new_amount) {
     return null;
   }
 
-  // Reload page
   pull_user_budget();
 
   return data;
@@ -238,58 +242,44 @@ async function update_row(row, new_amount) {
 // * When edit is clicked, this mode is triggered, where previous buttons are hidden and a new submit button enters. This waits for user to hit submit before
 // * altering database
 function enter_edit_mode(e) {
-  const button = e.target;
-  const row = button.closest("tr");
-
-  const cells = row.querySelectorAll("td");
+  const row = e.target.closest("tr");
+  const amount_cell = row.children[1];
   const action_div = row.querySelector("div");
-
-  const amount_cell = cells[1];
 
   const current_amount = stringMoney_to_float(amount_cell.textContent);
 
   action_div.innerHTML = "";
 
-  // New Submit button lol
-  const submit_button = document.createElement("button");
-  submit_button.textContent = "Submit";
-  action_div.appendChild(submit_button);
-
-  // Here I'm gonna replace the amount cell with an input box to improve UI experience (so that they don't have to scroll up)
-  let input = document.createElement("input");
-  input.type = "text";
+  const input = document.createElement("input");
+  input.type = "number";
   input.value = current_amount;
   input.classList.add("edit-input");
 
-  amount_cell.textContent = "";
-  amount_cell.appendChild(input);
+  amount_cell.replaceChildren(input);
 
-  submit_button.addEventListener("click", () => update_row(row, input.value)); // Chat helped me figure this func out. Would love to learn more about =>
+  const submit_button = document.createElement("button");
+  submit_button.textContent = "Submit";
+
+  submit_button.addEventListener("click", () => {
+    update_row(row, input.value);
+  });
+
+  action_div.appendChild(submit_button);
 }
 
 // * Deletes a row based on user data and item name.
 async function delete_row(e) {
-  let { get_user_name, get_budget_name } = get_user_info();
-
   const button = e.target;
-
-  const item_name = button.dataset.item;
-  const amount = stringMoney_to_float(button.dataset.amount);
+  const id = button.dataset.id;
 
   const row = button.closest("tr");
 
-  const { error } = await db
-    .from(table_name)
-    .delete()
-    .eq("User_Name", get_user_name)
-    .eq("Budget_Name", get_budget_name)
-    .eq("Item_Name", item_name)
-    .eq("Amount", amount);
+  const { error } = await db.from(table_name).delete().eq("id", id);
 
   if (error) {
     console.error("Delete failed:", error);
   } else {
-    row.remove(); // cool little function from chat
+    row.remove();
   }
 }
 
