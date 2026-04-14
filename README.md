@@ -2,9 +2,16 @@
 
 Asher Ruiz
 
+To Tanner: If you want to pull up an already existing random budget type:
+Username: Money Man 3000
+Budget Name: My Budget
+This one is pre-built!
+
 ## Edit Button (Update Button)
 
 This usually works, however, I have found that sometimes this throws errors when I attempt to reload the user's budget in. It literally just depends on the time of day. Sometimes, when I update a row, everything reloads fine. Sometimes when I update the row, my whole budget disappears for 5 seconds, and then I hit refresh just for it to come back. On time, I updated the row, it even updated in the database, but my query just decided it did not want that one item. Then, after 3 refreshes, it worked. Seems finnicky. I am most likely doing something wrong on my end too, but it seems like queries to databases can simply fail sometimes, especially with the .update query.
+
+Edit After: This fixed itself when I used ID instead of my old method!
 
 ## Supabase
 
